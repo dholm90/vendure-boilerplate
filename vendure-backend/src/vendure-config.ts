@@ -33,7 +33,7 @@ const emailPluginOptions = isDev || !process.env.SENDGRID_API_KEY ? {
     outputPath: path.join(__dirname, '../static/email/test-emails'),
     route: 'mailbox'
 } : {
-    emailSender: new ResendEmailSender(process.env.RESEND_API_KEY),
+    emailSender: new ResendEmailSender(process.env.RESEND_API_KEY as string),
     transport: {
         type: 'none'
     }
@@ -106,7 +106,10 @@ export const config: VendureConfig = {
         DefaultJobQueuePlugin.init({ useDatabaseForBuffer: true }),
         DefaultSearchPlugin.init({ bufferUpdates: false, indexStockStatus: true }),
         EmailPlugin.init({
-            ...emailPluginOptions,
+            emailSender: new ResendEmailSender(process.env.RESEND_API_KEY as string),
+            transport: {
+                type: 'none'
+            },
             handlers: defaultEmailHandlers,
             templatePath: path.join(__dirname, '../static/email/templates'),
             globalTemplateVars: {
