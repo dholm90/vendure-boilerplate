@@ -10,6 +10,7 @@ import { AdminUiPlugin } from '@vendure/admin-ui-plugin';
 import { StripePlugin } from '@vendure/payments-plugin/package/stripe';
 import 'dotenv/config';
 import path from 'path';
+import { ResendEmailSender } from './config/resend-email-sender';
 
 const isDev: Boolean = process.env.APP_ENV === 'dev';
 
@@ -32,10 +33,9 @@ const emailPluginOptions = isDev || !process.env.SENDGRID_API_KEY ? {
     outputPath: path.join(__dirname, '../static/email/test-emails'),
     route: 'mailbox'
 } : {
-    emailSender: new SendgridEmailSender(),
+    emailSender: new ResendEmailSender(process.env.RESEND_API_KEY),
     transport: {
-        type: 'sendgrid',
-        apiKey: process.env.SENDGRID_API_KEY
+        type: 'none'
     }
 };
 
