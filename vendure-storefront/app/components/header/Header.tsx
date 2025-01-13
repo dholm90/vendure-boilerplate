@@ -1,11 +1,10 @@
-import { Link, useLoaderData } from '@remix-run/react';
-import { ShoppingBagIcon } from '@heroicons/react/24/outline';
-import { SearchBar } from '~/components/header/SearchBar';
+import { Link } from '@remix-run/react';
+import { ShoppingBagIcon, MagnifyingGlassIcon } from '@heroicons/react/24/outline';
 import { useRootLoader } from '~/utils/use-root-loader';
-import { UserIcon } from '@heroicons/react/24/solid';
 import { useScrollingUp } from '~/utils/use-scrolling-up';
 import { classNames } from '~/utils/class-names';
 import { useTranslation } from 'react-i18next';
+import { SearchBar } from './SearchBar';
 
 export function Header({
   onCartIconClick,
@@ -15,7 +14,6 @@ export function Header({
   cartQuantity: number;
 }) {
   const data = useRootLoader();
-  const isSignedIn = !!data.activeCustomer.activeCustomer?.id;
   const isScrollingUp = useScrollingUp();
   const { t } = useTranslation();
 
@@ -23,44 +21,17 @@ export function Header({
     <header
       className={classNames(
         isScrollingUp ? 'sticky top-0 z-10 animate-dropIn' : '',
-        'bg-gradient-to-r from-zinc-700 to-gray-900 shadow-lg transform shadow-xl',
+        'bg-gradient-to-r from-blue-700 to-teal-900 shadow-lg transform shadow-xl',
       )}
     >
-      <div className="bg-zinc-100 text-gray-600 shadow-inner text-center text-sm py-2 px-2 xl:px-0">
-        <div className="max-w-6xl mx-2 md:mx-auto flex items-center justify-between">
-          <div>
-            <p className="hidden sm:block">
-              {t('vendure.exclusive')}{' '}
-              <a
-                href="https://funkyton.com/vendure-tutorial/"
-                target="_blank"
-                className="underline"
-              >
-                {t('vendure.repoLinkLabel')}
-              </a>
-            </p>
-          </div>
-          <div>
-            <Link
-              to={isSignedIn ? '/account' : '/sign-in'}
-              className="flex space-x-1"
-            >
-              <UserIcon className="w-4 h-4"></UserIcon>
-              <span>
-                {isSignedIn ? t('account.myAccount') : t('account.signIn')}
-              </span>
-            </Link>
-          </div>
-        </div>
-      </div>
       <div className="max-w-6xl mx-auto p-4 flex items-center space-x-4">
-        <h1 className="text-white w-10">
+        <h1 className="text-white w-20">
           <Link to="/">
             <img
-              src="/cube-logo-small.webp"
-              width={40}
-              height={31}
-              alt={t('commmon.logoAlt')}
+              src="/logo.webp"
+              width={80}
+              height={60}
+              alt={t('common.logoAlt')}
             />
           </Link>
         </h1>
@@ -77,7 +48,16 @@ export function Header({
           ))}
         </div>
         <div className="flex-1 md:pr-8">
+          {/* <div className="relative">
+            <input
+              type="text"
+              placeholder={t('common.search')}
+              className="w-full bg-white bg-opacity-20 rounded-full py-2 px-4 pl-10 text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-300"
+            />
+            <MagnifyingGlassIcon className="h-5 w-5 text-gray-300 absolute left-3 top-1/2 transform -translate-y-1/2" />
+          </div> */}
           <SearchBar></SearchBar>
+          
         </div>
         <div className="">
           <button
@@ -87,7 +67,7 @@ export function Header({
           >
             <ShoppingBagIcon></ShoppingBagIcon>
             {cartQuantity ? (
-              <div className="absolute rounded-full -top-2 -right-2 bg-primary-600 min-w-6 min-h-6 flex items-center justify-center text-xs p-1">
+              <div className="absolute rounded-full -top-2 -right-2 bg-blue-500 min-w-6 min-h-6 flex items-center justify-center text-xs p-1">
                 {cartQuantity}
               </div>
             ) : (
@@ -99,3 +79,4 @@ export function Header({
     </header>
   );
 }
+
