@@ -119,7 +119,7 @@ export function AddressForm({
             <select
               id="countryCode"
               name="countryCode"
-              defaultValue={address?.countryCode ?? 'US'}
+              defaultValue={address?.countryCode ?? 'CA'}
               className="block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
             >
               {availableCountries.map((item) => (
