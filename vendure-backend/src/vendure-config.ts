@@ -94,7 +94,7 @@ export const config: VendureConfig = {
             assetUploadDir: path.join(__dirname, 'assets'),
             namingStrategy: new DefaultAssetNamingStrategy(),
             storageStrategyFactory: configureS3AssetStorage({
-              bucket: 'my-s3-bucket',
+              bucket: process.env.AWS_BUCKET_NAME as string,
               credentials: {
                 accessKeyId: process.env.AWS_ACCESS_KEY_ID as string,
                 secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY as string,
