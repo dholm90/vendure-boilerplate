@@ -4,8 +4,10 @@ import {
     DefaultSearchPlugin,
     VendureConfig,
 } from '@vendure/core';
+import { AssetServerPlugin, configureS3AssetStorage } from '@vendure/asset-server-plugin';
+import { DefaultAssetNamingStrategy } from '@vendure/core';
+// import { fromEnv } from '@aws-sdk/credential-providers';
 import { defaultEmailHandlers, EmailPlugin, EmailPluginDevModeOptions, EmailPluginOptions } from '@vendure/email-plugin';
-import { AssetServerPlugin } from '@vendure/asset-server-plugin';
 import { AdminUiPlugin } from '@vendure/admin-ui-plugin';
 import { StripePlugin } from '@vendure/payments-plugin/package/stripe';
 import 'dotenv/config';
@@ -89,11 +91,18 @@ export const config: VendureConfig = {
     plugins: [
         AssetServerPlugin.init({
             route: 'assets',
-            assetUploadDir: process.env.ASSET_VOLUME_PATH || path.join(__dirname, '../static/assets'),
-            // For local dev, the correct value for assetUrlPrefix should
-            // be guessed correctly, but for production it will usually need
-            // to be set manually to match your production url.
-            assetUrlPrefix: isDev ? undefined : `https://${process.env.PUBLIC_DOMAIN}/assets/`,
+            assetUploadDir: path.join(__dirname, 'assets'),
+            namingStrategy: new DefaultAssetNamingStrategy(),
+            storageStrategyFactory: configureS3AssetStorage({
+              bucket: 'my-s3-bucket',
+              credentials: {
+                accessKeyId: process.env.AWS_ACCESS_KEY_ID as string,
+                secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY as string,
+              }, // or any other credential provider
+              nativeS3Configuration: {
+                region: process.env.AWS_REGION,
+              },
+            }),
         }),
         StripePlugin.init({
             storeCustomersInStripe: true,
